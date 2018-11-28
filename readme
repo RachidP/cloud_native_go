@@ -3,3 +3,14 @@ USE JSON PACKAGE FOR MARSHALING AND UNMARSHALING OF GO STRUCTS
 IMPLEMENT SIMPLE REST APIs WITH GO
 
 USE POSTMAN FOR CHECKING THE WORK
+
+
+1)create a image 
+docker build -t rachid123/cloud_native_go:1.1 .
+2)login to https://hub.docker.com/
+docker login
+3) push to hub.docker
+docker push rachid123/cloud_native_go:1.1
+
+P.s: if you want to docker remove <none> TAG images
+docker image prune
