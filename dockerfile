@@ -1,8 +1,10 @@
-FROM golang:1.11-alpine3.8 
-COPY ./cloud_native_go /app/Cloud-Native-Go
-RUN chmod +x /app/Cloud-Native-Go
+FROM golang:1.8
 
-ENV PORT 8080
-EXPOSE 8080
+WORKDIR /go/src/app
+COPY . .
+ENV PORT 8087
+EXPOSE 8087
+RUN go get -d -v ./...
+RUN go install -v ./...
 
-ENTRYPOINT /app/cloud_native_go
+CMD ["app"]
