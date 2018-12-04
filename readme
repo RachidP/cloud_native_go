@@ -6,7 +6,18 @@ USE POSTMAN FOR CHECKING THE WORK
 
 
 1)create a image 
-docker build -t rachid123/cloud_native_go:1.1 .
+docker build -t cloud_native_go:v3 .
+2) check images 
+docker images
+3) rename the image
+ docker -t cloud_native_go:v3 rachid123/cloud_native_go:v3
+
+4) check images 
+docker images
+
+5)run the docker container
+docker run -p 8070:8070 rachid123/cloud_native_go:v3
+
 2)login to https://hub.docker.com/
 docker login
 3) push to hub.docker
@@ -14,3 +25,10 @@ docker push rachid123/cloud_native_go:1.1
 
 P.s: if you want to docker remove <none> TAG images
 docker image prune
+
+//access iside a docker container
+docker exec -ti CONTAINER_ID bash
+
+//add a volume to the container
+docker run -d --name nginx-1-13-7 -p 8080:80 -v "path_folder_from_the_host_machine:path_folder_in_docker_machine" nginx-1-13-7
+docker run -d --name nginx-1-13-7 -p 8080:80 -v "/home/rachid/workspace/go/src/github.com/RachidP/exercises/cloud_native_go:/usr/share/nginx/html" nginx-1-13-7

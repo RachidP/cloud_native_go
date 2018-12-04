@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/RachidP/exercises/cloud_native_go/api"
+	//"github.com/RachidP/exercises/cloud_native_go/api"
 )
 
 func main() {
@@ -22,12 +23,13 @@ func main() {
 func port() string {
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
-		port = "8080"
+		port = "8086"
 	}
 	return ":" + port
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+	fmt.Println("Hola RAchid you welcome")
 	fmt.Fprintf(w, "Welcome to Cloud Native Go (Update).")
 }
