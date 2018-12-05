@@ -1,0 +1,63 @@
+//in this version we use struct, hash for saving data
+
+//run the app
+.go build -o myapp .
+../myapp
+
+1) home page   
+    http://localhost:8080 
+
+
+
+2) git list all books: 
+ . http://localhost:8080/api/books
+ .use git
+
+
+3) ADD a book: 
+ . use POST
+ . http://localhost:8080/api/books
+ . add json to the body . raw
+  {
+        "title": "The Hitchhiker's Guide to the Galaxy",
+        "author": "Douglas Adams",
+        "isbn": "0345391802"
+    }
+. check response In headers 
+                    .(status 201 created)
+                    .date →Tue, 04 Dec 2018 17:51:18 GMT
+                    .location →/api/books/034539180432
+.use step 2 for checking the the presence of the new books
+
+
+
+4) GIT a book by isbn: 
+ . use GET
+ . http://localhost:8080/api/books/67886868     67886868 is the isbn
+ . See the result json on the body
+  {
+        "title": "The Hitchhiker's Guide to the Galaxy",
+        "author": "Douglas Adams",
+        "isbn": "67886868"
+    }
+. if the isbn number is wrong see status code 404
+
+
+5) update a book
+ use PUT request
+ . http://localhost:8080/api/books/034539122802   
+ . add json to the body . raw
+  {
+        "title": "The Hitchhiker's Guide to the Galaxy",
+        "author": "Douglas Adams upated",
+        "isbn": "034539122802"
+    }
+ .check status code 200
+ .use step 2 for checking the update
+
+
+ 5) delete a book
+ use DELETE request
+ . http://localhost:8080/api/books/034539122802   
+ .check status code 200
+ .use step 2 for checking the update list of books
