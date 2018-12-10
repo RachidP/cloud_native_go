@@ -1,0 +1,9 @@
+FROM golang:1.11-alpine3.8 
+COPY ./cloud_native_go /app/cloud_native_go
+RUN chmod +x /app/cloud_native_go
+
+ENV PORT 8080
+EXPOSE 8080
+
+#ENTRYPOINT /app/microservice
+ENTRYPOINT /app/cloud_native_go

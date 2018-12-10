@@ -1,0 +1,11 @@
+Her a example how to use mongo db with golang
+I did CRUD operation with mongodb and I tested a lot functions.
+
+You can find some alternative working solution 's for 
+.adding data  //insertOneDocument1()
+.get all data //getAllDocument2() and getAllDocument3()
+
+
+N.B: Be VERY careful when you update a document. The key must be exactly equal to The
+key in the DB, otherwise You will add a new's key to the document. so the
+shape of the document will change 
