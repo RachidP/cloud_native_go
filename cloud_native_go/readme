@@ -1,0 +1,178 @@
+THIS VERSION IS EQUAL VERSION 6, THE ONLY DIFFERENCE IS THIS VERSION USE GO MODULE,
+SO YOU CAN USE THIS FOLDER IN ANY PLACE OUTSIDE GO Path
+
+HOW TO RUN THE APP IN A SWARM
+1) create two o more nodes (manager1, worker1, workder2)
+$ docker-machine create --driver virtualbox –virtualbox-boot2docker-url ~/Downloads/boot2docker.iso manager1
+2)check machines are created
+   $ docker-machine ls 
+3)connect to manager1
+    . $docker-machine env manager1
+    . $eval $(docker-machine env manager1) //now you terminale point to manager1
+4)make node named manager1 as manager1
+    .docker-machine ls
+    .$docker swarm init --advertise-addr MANAGER_IP
+5)connect worker to manager1 (use the result of the following step)
+    . $docker swarm join-token manager
+6)check is all ok
+    . $docker node ls
+7) build/create the image
+    . $docker-compose build
+8) deploy (and scale) the app into swarm
+    . $docker stack deploy -c docker-compose.yml myapp
+
+9) check if the services are working
+    .$docker stack ps myapp
+    .$docker service ls    //see the service name in this case is myapp_microservice
+    .$docker service ps myapp_microservice //see in which nodes the services are working
+
+10) go to the browser with the address of the docker-machine manager1 or worker2 and check if it is working
+    . $docker-machine ls  (see the ip of the machines)
+    . $docker service inspect  myapp_microservice   (find PublishedPort and use that port)
+    . http://192.168.99.101:8082
+
+11) scale the app. changing the number of replicas on docker-compose
+    . repeat steps from step 7 (rebuild)
+
+12) tear down the stack
+    .$docker stack rm myapp
+
+13) unset docker-machine environment
+    .$eval $(docker-machine env -u)
+14) remove a swarm 
+    . $docker-machine ssh worker1 "docker swarm leave"    
+    . $docker-machine ssh manager "docker swarm leave --force"
+15) delete all virtual-machines and their disk image
+    .$docker-machine rm $(docker-machine ls -q)
+
+
+
+
+this version I contaneraiz may app with docker. (not using swarm) 
+I created two container: one for go cloud_native_go and the other for mongo db
+You can start the app with docker-compose
+//with docker-compose
+1) docker-compose build
+2) docker-compose up
+3) docker ps to see which port are you using
+4) go to localhost:{port-showed-in-step3} (example localhost:8080)
+5) scale the app. $docker-compose scale microservice=5
+6) repeat step 3 and 4 to see the result
+7) shot-off the service  $docker-compose down
+NB) remember to delete the builder image ($docker image prune)
+
+
+
+build and run the app without docker-compose
+//build the image
+$ docker build --no-cache -t cloud-native-go:v1 .
+
+//tag the image
+docker tag cloud-native-go:v1 rachid123/cloud-native-go:v1
+
+//push the image in hub.docker.com
+docker login
+docker push rachid123/cloud-native-go:v1
+
+//run the image
+$ docker run -p 8080:8080/tcp  cloud-native-go:v1 .
+
+//alternatively you can build a image with docker-compose.
+step 1: create a dockerfile for creating a image
+step 2: create a docker-compose.yml for building a image specified in dockefile 
+step 3: use command: 
+     $docker-compose build
+step 4: lanch the container:
+     $docker-compose up    
+    or lanch in background
+    $docker-compose up -d 
+step5: if you want to go inside a running countainer
+    $ docker attach <container_name>
+
+
+
+FROM golang:1.11.2 as builder
+
+ENV PORT 8080
+EXPOSE 8080
+WORKDIR /github.com/RachidP/cloud_native_go
+RUN cd /github.com/RachidP/cloud_native_go && ls
+COPY . .
+
+RUN ls -la
+
+#RUN go get github.com/mongodb/mongo-go-driver/mongo
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o myapp . 
+# ENTRYPOINT [ "./myapp" ]
+
+# CMD ["./myapp" ]
+
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates 
+WORKDIR /root/
+COPY --from=builder /github.com/RachidP/cloud_native_go/myapp .
+EXPOSE 8080
+
+RUN ls -la
+
+# ENTRYPOINT [ "./myapp" ]
+# ENTRYPOINT [ "./myapp" ]
+CMD ["./myapp" ]
+
+
+
+//check wich port are used in your system
+$sudo lsof -i -P -n | grep LISTEN
+https://www.cyberciti.biz/faq/unix-linux-check-if-port-is-in-use-command/
+
+//close a port
+sudo systemctl stop mongod
+
+
+
+VERSION 4
+
+update the app, storing the data wirh mongo DB
+
+
+VERSION3:
+In this version I refactored the UI using BOOTSRAP 4.0 AND
+Google API Icons
+
+
+
+IMPEMENT HTTP SERVER USING THE NET/HTTP PACKAGE
+USE JSON PACKAGE FOR MARSHALING AND UNMARSHALING OF GO STRUCTS
+IMPLEMENT SIMPLE REST APIs WITH GO
+
+USE POSTMAN FOR CHECKING THE WORK
+
+
+1)create a image 
+docker build -t cloud_native_go:v3 .
+2) check images 
+docker images
+3) rename the image
+ docker -t cloud_native_go:v3 rachid123/cloud_native_go:v3
+
+4) check images 
+docker images
+
+5)run the docker container
+docker run -p 8070:8070 rachid123/cloud_native_go:v3
+
+2)login to https://hub.docker.com/
+docker login
+3) push to hub.docker
+docker push rachid123/cloud_native_go:1.1
+
+P.s: if you want to docker remove <none> TAG images
+docker image prune
+
+//access iside a docker container
+docker exec -ti CONTAINER_ID bash
+
+//add a volume to the container
+docker run -d --name nginx-1-13-7 -p 8080:80 -v "path_folder_from_the_host_machine:path_folder_in_docker_machine" nginx-1-13-7
+docker run -d --name nginx-1-13-7 -p 8080:80 -v "/home/rachid/workspace/go/src/github.com/RachidP/exercises/cloud_native_go:/usr/share/nginx/html" nginx-1-13-7

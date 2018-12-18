@@ -1,0 +1,31 @@
+version: '3'
+services:
+  
+  mongodb_service:
+      image: mongo
+      container_name: my_first_mongodb
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongodata:/data/db
+      networks:
+        - mongo-go
+
+  microservice:
+    depends_on:
+      - mongodb_service
+    build: .
+    image: cloud-native-go:v1
+    environment: 
+      - PORT=9090
+    ports:
+      - "9090:9090"
+    networks:
+        - mongo-go
+
+
+volumes:
+   mongodata: {}
+
+networks:
+   mongo-go:

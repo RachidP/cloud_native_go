@@ -1,9 +1,0 @@
-# version: '2'
-# services: 
-#     microservice:
-#         build: .
-#         image: cloud_native_go:1.0.1-alpine
-#         environment: 
-#         - PORT=9090
-#         ports: 
-#         - "9090:9090"
