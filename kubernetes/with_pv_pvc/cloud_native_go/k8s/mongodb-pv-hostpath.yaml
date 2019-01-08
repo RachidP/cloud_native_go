@@ -1,0 +1,18 @@
+# you’ll first assume the role of a cluster
+# administrator and create a PersistentVolume backed by the GCE Persistent Disk. (file:mongodb-pv-hostpath)
+# Then you’ll assume the role of the application developer and first claim the 
+# PersistentVolume (file:mongodb-pvc.yaml) and then use it inside your pod (file:rs-mongo.yaml)
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongodb-pv
+spec:
+  capacity: 
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/mongodb

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice
+spec:
+  type: NodePort
+  ports:
+  - name: microservice #each service if use multiport should use a named port
+    port: 9090  #the port this service will be available on 
+    targetPort: cng-contport # cng-contport the container port the service will forward to.use the port called cng-ContainerPort inside a POD (see k8s_replicaset.yml) 
+    nodePort: 30123  #you can ommit it and will be generate random
+  selector:
+    app: cloud-native-go 

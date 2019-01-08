@@ -1,0 +1,14 @@
+#As soon as you create the claim, Kubernetes finds the appropriate PersistentVolume
+#and binds it to the claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc 
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  # storageClassName: ""  
+  #Explicitly set storageClassName to "" if you want the PVC to use a preprovisioned PersistentVolume.

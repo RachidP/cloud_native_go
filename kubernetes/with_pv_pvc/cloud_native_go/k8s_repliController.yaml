@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ReplicationController
+metadata: 
+  name: rc-cloud-native-go
+spec:
+  replicas: 3
+  template:
+    metadata: 
+      labels:
+        app: cloud-native-go
+        language: go
+        env: test
+    spec:  
+      containers:
+      - name: cloud-native-go
+        image: rachid123/cloud-native-go:v1
+        ports:
+        - name: cng-ContainerPort
+        - containerPort: 9090
+          protocol: TCP

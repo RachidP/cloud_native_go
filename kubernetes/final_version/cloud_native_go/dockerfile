@@ -1,0 +1,29 @@
+
+FROM golang:1.11.2 as builder
+LABEL author="https://github.com/RachidP/"
+ENV GO111MODULE=on
+WORKDIR /github.com/RachidP/cloud_native_go
+#download the dipendency only when go.sum or go.mod have been changed 
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY . .
+# RUN ls -la
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o myapp . 
+# ENTRYPOINT [ "./myapp" ]
+
+
+
+FROM scratch
+LABEL author="https://github.com/RachidP/"
+# RUN apk --no-cache add ca-certificates 
+ENV BUILDER_WORKDIR=/github.com/RachidP/cloud_native_go
+WORKDIR /github.com/RachidP/cloud_native_go
+COPY --from=builder ${BUILDER_WORKDIR}/myapp .
+COPY --from=builder ${BUILDER_WORKDIR}/templates ./templates
+# ENV PORT 9090
+# EXPOSE 9090
+# RUN ls -la
+
+ENTRYPOINT [ "./myapp" ]

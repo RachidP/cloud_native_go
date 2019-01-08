@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: cloud-native-go
+spec:
+  replicas: 3
+  selector:
+    matchExpressions:
+    - key: app
+      operator: In
+      values:
+        - cloud-native-go
+  template:
+    metadata: 
+      labels:
+        app: cloud-native-go
+        language: go
+    spec:  
+      containers:
+      - name: cloud-native-go
+        image: rachid1234/cloud-native-go:v1
+        env:
+        - name: PORT
+          value: "9092"
+        ports:
+        - name: cng-contport
+          containerPort: 9092
+          protocol: TCP
